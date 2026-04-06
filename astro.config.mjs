@@ -3,7 +3,8 @@ import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://your-portfolio.netlify.app',
+  // Use environment variable, fallback to a placeholder for local dev
+  site: process.env.SITE_URL || 'http://localhost:4321',
   integrations: [tailwind(), sitemap()],
   output: 'static',
   image: {
