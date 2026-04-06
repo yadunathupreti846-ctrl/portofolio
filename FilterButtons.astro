@@ -1,0 +1,35 @@
+---
+export interface Props {
+  categories: string[];
+  activeCategory: string;
+}
+
+const { categories, activeCategory } = Astro.props;
+---
+
+<div class="flex flex-wrap gap-3 justify-center mb-12">
+  <button 
+    data-category="all" 
+    class="filter-btn px-6 py-2 rounded-full font-medium transition-all duration-300"
+    class:list={[
+      activeCategory === 'all' 
+        ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30' 
+        : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-purple-100 dark:hover:bg-purple-900/30'
+    ]}
+  >
+    All
+  </button>
+  {categories.map(category => (
+    <button 
+      data-category={category} 
+      class="filter-btn px-6 py-2 rounded-full font-medium transition-all duration-300 capitalize"
+      class:list={[
+        activeCategory === category 
+          ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30' 
+          : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-purple-100 dark:hover:bg-purple-900/30'
+      ]}
+    >
+      {category}
+    </button>
+  ))}
+</div>

@@ -1,0 +1,84 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import ProjectCard from '@components/ProjectCard.astro';
+import FilterButtons from '@components/FilterButtons.astro';
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('projects');
+const sortedProjects = allProjects.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const categories = [...new Set(allProjects.map(p => p.data.category))];
+const activeCategory = Astro.url.searchParams.get('category') || 'all';
+---
+
+<BaseLayout title="Projects">
+  <div class="container-custom py-16">
+    <div class="text-center mb-12">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+        My Projects
+      </h1>
+      <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+        A collection of my work in web development, mobile apps, and design
+      </p>
+    </div>
+
+    <FilterButtons categories={categories} activeCategory={activeCategory} />
+
+    <div id="projects-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {sortedProjects.map(project => (
+        <div 
+          class="project-item"
+          data-category={project.data.category}
+          style:display={activeCategory === 'all' || activeCategory === project.data.category ? 'block' : 'none'}
+        >
+          <ProjectCard 
+            title={project.data.title}
+            slug={project.data.slug}
+            category={project.data.category}
+            date={project.data.date}
+            featuredImage={project.data.featuredImage}
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  const projectItems = document.querySelectorAll('.project-item');
+  
+  function filterProjects(category) {
+    projectItems.forEach(item => {
+      const itemCategory = item.getAttribute('data-category');
+      if (category === 'all' || itemCategory === category) {
+        item.style.display = 'block';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+    
+    const url = new URL(window.location.href);
+    if (category === 'all') {
+      url.searchParams.delete('category');
+    } else {
+      url.searchParams.set('category', category);
+    }
+    window.history.pushState({}, '', url);
+  }
+  
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const category = btn.getAttribute('data-category');
+      if (category) {
+        filterProjects(category);
+        
+        filterButtons.forEach(b => {
+          b.classList.remove('bg-purple-600', 'text-white', 'shadow-lg', 'shadow-purple-500/30');
+          b.classList.add('bg-gray-100', 'dark:bg-gray-800', 'text-gray-700', 'dark:text-gray-300');
+        });
+        btn.classList.remove('bg-gray-100', 'dark:bg-gray-800', 'text-gray-700', 'dark:text-gray-300');
+        btn.classList.add('bg-purple-600', 'text-white', 'shadow-lg', 'shadow-purple-500/30');
+      }
+    });
+  });
+</script>

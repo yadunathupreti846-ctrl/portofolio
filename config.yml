@@ -1,0 +1,51 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "projects"
+    label: "Projects"
+    folder: "src/content/projects"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "Category", name: "category", widget: "select", options: ["web", "mobile", "design"] }
+      - { label: "Featured Image", name: "featuredImage", widget: "image" }
+      - { label: "Gallery", name: "gallery", widget: "list", field: { label: "Image", name: "image", widget: "image" }, required: false }
+      - { label: "Description", name: "body", widget: "markdown" }
+      - { label: "Live URL", name: "liveUrl", widget: "string", required: false }
+      - { label: "GitHub URL", name: "githubUrl", widget: "string", required: false }
+      - { label: "Featured", name: "featured", widget: "boolean", default: false, required: false }
+
+  - name: "about"
+    label: "About"
+    folder: "src/content/about"
+    create: false
+    slug: "index"
+    fields:
+      - { label: "Profile Image", name: "profileImage", widget: "image" }
+      - label: "Social Links"
+        name: "socialLinks"
+        widget: "list"
+        fields:
+          - { label: "Platform", name: "platform", widget: "string" }
+          - { label: "URL", name: "url", widget: "string" }
+      - { label: "Bio", name: "body", widget: "markdown" }
+
+  - name: "settings"
+    label: "Settings"
+    folder: "src/content/settings"
+    create: false
+    slug: "settings"
+    format: "json"
+    fields:
+      - { label: "Site Title", name: "siteTitle", widget: "string" }
+      - { label: "Logo", name: "logo", widget: "image" }
+      - { label: "Footer Text", name: "footerText", widget: "string" }
+      - { label: "Contact Email", name: "contactEmail", widget: "string" }
